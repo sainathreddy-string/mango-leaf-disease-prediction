@@ -1,5 +1,7 @@
-Pillow
-numpy
-tensorflow==2.13.0
-flask
-opencv-python==4.9.0.80
+Flask==2.3.3
+tensorflow-cpu==2.13.0
+numpy==1.24.3
+opencv-python-headless
+pillow
+matplotlib
+gunicorn
