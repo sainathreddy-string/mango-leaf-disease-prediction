@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disease Distribution</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #f1f2f6;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+        canvas {
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <h2>Disease Classification Distribution</h2>
+    <canvas id="diseasePieChart" width="400" height="400"></canvas>
+
+    <script>
+        const labels = {{ labels|tojson|safe }};
+        const values = {{ values|tojson|safe }};
+
+        const ctx = document.getElementById('diseasePieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Leaf Disease Count',
+                    data: values,
+                    backgroundColor: [
+                        '#e74c3c', '#f39c12', '#2ecc71', '#8e44ad',
+                        '#3498db', '#1abc9c', '#9b59b6', '#34495e'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#2c3e50',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                let value = context.raw;
+                                return `${label}: ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

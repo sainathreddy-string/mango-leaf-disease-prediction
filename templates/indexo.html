@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mango Leaf Disease Detection</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1e88e5;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .result, .images {
+            margin-top: 20px;
+        }
+
+        .images {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .images img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #43a047;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2e7d32;
+        }
+
+        /* Modal base styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            margin: 8% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            text-align: left;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .modal-content h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .modal-content p,
+        .modal-content ol {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .modal-content ol {
+            padding-left: 20px;
+        }
+
+        .modal-content ol li {
+            margin-bottom: 10px;
+        }
+
+        .close {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mango Leaf Disease Classifier</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <br><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <h2 style="color: #1b5e20;">Prediction: <strong>{{ prediction }}</strong></h2>
+        <p style="font-size: 18px;">{{ class_info }}</p>
+    </div>
+
+    <div class="images">
+        <img src="{{ url_for('static', filename=uploaded_image) }}" alt="Uploaded Image">
+        <img src="{{ url_for('static', filename=segmented_image) }}" alt="Segmented Image">
+    </div>
+
+    <button onclick="showModal('{{ prediction }}')">Show Remedy and Steps</button>
+
+    <!-- Modal -->
+    <div id="remedyModal" class="modal">
+        <div class="modal-content" id="modalBox">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Remedy</h3>
+            <p>{{ remedy_info }}</p>
+            <h4>Steps to Follow</h4>
+            <ol>
+                {% for step in remedy_steps %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("remedyModal");
+        const modalBox = document.getElementById("modalBox");
+
+        const diseaseColors = {
+            "Anthracnose":    { bg: "#ffccbc", text: "#bf360c" },
+            "Bacterial Canker": { bg: "#c8e6c9", text: "#1b5e20" },
+            "Cutting Weevil": { bg: "#f8bbd0", text: "#880e4f" },
+            "Die Back":       { bg: "#e1bee7", text: "#4a148c" },
+            "Gall Midge":     { bg: "#ffe082", text: "#e65100" },
+            "Healthy":        { bg: "#b2dfdb", text: "#004d40" },
+            "Powdery Mildew": { bg: "#dcedc8", text: "#33691e" },
+            "Sooty Mould":    { bg: "#f0f4c3", text: "#827717" }
+        };
+
+        function showModal(disease) {
+            const color = diseaseColors[disease];
+            modalBox.style.backgroundColor = color.bg;
+            modalBox.style.color = color.text;
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    {% endif %}
+</body>
+</html>

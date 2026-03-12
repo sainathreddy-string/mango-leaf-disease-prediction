@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+            text-align: center;
+            padding: 100px;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 48px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            background-color: white;
+            color: #27ae60;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        a:hover {
+            background-color: #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Mango Leaf Disease Detection</h1>
+    <a href="{{ url_for('register') }}">Register</a>
+    <a href="{{ url_for('login') }}">Login</a>
+</body>
+</html>
